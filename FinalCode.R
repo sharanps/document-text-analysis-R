@@ -6,25 +6,25 @@ Final_QA_Consolidation <- NULL
 
 for(i in 1:length(EA_URL))
 {
-	raw_Data = readLines(EA_URL[i]);
-	start_Line = grep(QA_Start,raw_Data,ignore.case = FALSE);
-	end_Line = grep(QA_End,raw_Data,ignore.case = FALSE);
-	QA_Section <- raw_Data[start_Line:end_Line];
-	
-	fileName <- paste(i,'.txt');
-	print(start_Line);
-	print(end_Line);
-	cat(QA_Section, file=fileName, append = TRUE);
-	QA_Section_Clean <- htmlToText(fileName)
-
-	cat(QA_Section_Clean, file=fileName, append = FALSE);
-	
-	QA_Section_Latin <- readChar(fileName, file.info(fileName)$size);
-	
-	QA_ASCII <- iconv(x = QA_Section_Latin, from = "latin1", to = "ASCII", "");
-
-	Final_QA_Consolidation[i] <- QA_ASCII ;
-	
+  raw_Data = readLines(EA_URL[i]);
+  start_Line = grep(QA_Start,raw_Data,ignore.case = FALSE);
+  end_Line = grep(QA_End,raw_Data,ignore.case = FALSE);
+  QA_Section <- raw_Data[start_Line:end_Line];
+  
+  fileName <- paste(i,'.txt');
+  print(start_Line);
+  print(end_Line);
+  cat(QA_Section, file=fileName, append = TRUE);
+  QA_Section_Clean <- htmlToText(fileName)
+  
+  cat(QA_Section_Clean, file=fileName, append = FALSE);
+  
+  QA_Section_Latin <- readChar(fileName, file.info(fileName)$size);
+  
+  QA_ASCII <- iconv(x = QA_Section_Latin, from = "latin1", to = "ASCII", "");
+  
+  Final_QA_Consolidation[i] <- QA_ASCII ;
+  
 }
 
 summary(Final_QA_Consolidation)
@@ -35,31 +35,31 @@ QA_Corpus <- Corpus(QA_Vector)
 
 inspect(QA_Corpus)
 
- QA_Corpus <- tm_map(QA_Corpus, tolower)
- QA_Corpus <- tm_map(QA_Corpus, removePunctuation)
- QA_Corpus <- tm_map(QA_Corpus, removeNumbers)
- QA_Corpus <- tm_map(QA_Corpus, removeWords,stopwords("english"))
+QA_Corpus <- tm_map(QA_Corpus, tolower)
+QA_Corpus <- tm_map(QA_Corpus, removePunctuation)
+QA_Corpus <- tm_map(QA_Corpus, removeNumbers)
+QA_Corpus <- tm_map(QA_Corpus, removeWords,stopwords("english"))
 
 library("SnowballC")
 
 QA_Corpus <- tm_map(QA_Corpus, stemDocument)
 detach("package:SnowballC", unload=TRUE)
 
- QA_Corpus <- tm_map(QA_Corpus,PlainTextDocument)
- QA_Corpus_1 <- DocumentTermMatrix(QA_Corpus)
+QA_Corpus <- tm_map(QA_Corpus,PlainTextDocument)
+QA_Corpus_1 <- DocumentTermMatrix(QA_Corpus)
 
- QA_TDM <- as.matrix(QA_Corpus_1)
- dim(QA_TDM)
+QA_TDM <- as.matrix(QA_Corpus_1)
+dim(QA_TDM)
 
- write.csv(tdm,"tdm.csv") 
- 
- findFreqTerms(x=QA_Corpus_1, lowfreq = 100)
- findFreqTerms(x=QA_Corpus_1, lowfreq = 200)
- findFreqTerms(x=QA_Corpus_1, lowfreq = 300)
- findFreqTerms(x=QA_Corpus_1, lowfreq = 400)
- findFreqTerms(x=QA_Corpus_1, lowfreq = 495)
- findFreqTerms(x=QA_Corpus_1, lowfreq = 500)
- 
+write.csv(tdm,"tdm.csv") 
+
+findFreqTerms(x=QA_Corpus_1, lowfreq = 100)
+findFreqTerms(x=QA_Corpus_1, lowfreq = 200)
+findFreqTerms(x=QA_Corpus_1, lowfreq = 300)
+findFreqTerms(x=QA_Corpus_1, lowfreq = 400)
+findFreqTerms(x=QA_Corpus_1, lowfreq = 495)
+findFreqTerms(x=QA_Corpus_1, lowfreq = 500)
+
 findAssocs(x=QA_Corpus_1,term="vote",corlimit=0.6)
 findAssocs(x=QA_Corpus_1,term="vote",corlimit=0.5)
 
@@ -75,11 +75,11 @@ QA_removesparse_1 <- removeSparseTerms(QA_Corpus_1,0.3)
 
 QA_removesparse_1
 
-> QA_freq <- sort(colSums(as.matrix(QA_Corpus_1)),decreasing = TRUE)
-> head(freq,14)
+QA_freq <- sort(colSums(as.matrix(QA_Corpus_1)),decreasing = TRUE)
+ head(freq,14)
 
-> QA_wf <- data.frame(word=names(QA_freq),QA_freq=QA_freq)
-> head(QA_wf)
+ QA_wf <- data.frame(word=names(QA_freq),QA_freq=QA_freq)
+ head(QA_wf)
 
 library("ggplot2", lib.loc="/Library/Frameworks/R.framework/Versions/3.2/Resources/library")
 library("dplyr")
